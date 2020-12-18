@@ -10,10 +10,16 @@ type Country struct {
 	Title string `db:"title"`
 }
 
+type City struct {
+	ID    int    `db:"city_id"`
+	Title string `db:"title"`
+}
+
 type University struct {
 	ID        int           `db:"university_id"`
 	Name      string        `db:"name"`
 	CountryID sql.NullInt32 `db:"country_id"`
+	CityID        sql.NullInt32  `db:"city_id"`
 }
 
 type School struct {
@@ -24,6 +30,7 @@ type School struct {
 	YearGraduated sql.NullInt32  `db:"year_graduated"`
 	Type          sql.NullString `db:"type_str"`
 	CountryID     sql.NullInt32  `db:"country_id"`
+	CityID        sql.NullInt32  `db:"city_id"`
 }
 
 type Group struct {

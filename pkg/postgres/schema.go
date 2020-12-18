@@ -11,6 +11,16 @@ CREATE TABLE IF NOT EXISTS countries
     CONSTRAINT pk_countries PRIMARY KEY (country_id)
 );
 
+CREATE TABLE IF NOT EXISTS cities
+(
+    city_id int2
+        not null,
+    title   text
+        not null,
+
+    CONSTRAINT pk_cities PRIMARY KEY (city_id)
+);
+
 CREATE TABLE IF NOT EXISTS universities
 (
     university_id int2
@@ -18,11 +28,17 @@ CREATE TABLE IF NOT EXISTS universities
     name          text
         not null,
     country_id    int2,
+    city_id        int2,
 
     CONSTRAINT pk_universities PRIMARY KEY (university_id),
 
     CONSTRAINT fk_country FOREIGN KEY (country_id)
         REFERENCES countries (country_id)
+        ON DELETE SET NULL
+        ON UPDATE CASCADE,
+
+    CONSTRAINT fk_city FOREIGN KEY (city_id)
+        REFERENCES cities (city_id)
         ON DELETE SET NULL
         ON UPDATE CASCADE
 );
@@ -38,11 +54,17 @@ CREATE TABLE IF NOT EXISTS schools
     year_graduated int2,
     type_str       text,
     country_id     int2,
+    city_id        int2,
 
     CONSTRAINT pk_schools PRIMARY KEY (school_id),
 
     CONSTRAINT fk_country FOREIGN KEY (country_id)
         REFERENCES countries (country_id)
+        ON DELETE SET NULL
+        ON UPDATE CASCADE,
+
+    CONSTRAINT fk_city FOREIGN KEY (city_id)
+        REFERENCES cities (city_id)
         ON DELETE SET NULL
         ON UPDATE CASCADE
 );
@@ -129,6 +151,7 @@ CREATE TABLE IF NOT EXISTS users
         not null,
     university_id   int2,
     country_id      int2,
+    city_id         int2,
     home_town       text
         not null,
     universities    int2[]
@@ -160,6 +183,11 @@ CREATE TABLE IF NOT EXISTS users
 
     CONSTRAINT fk_country FOREIGN KEY (country_id)
         REFERENCES countries (country_id)
+        ON DELETE SET NULL
+        ON UPDATE CASCADE,
+
+    CONSTRAINT fk_city FOREIGN KEY (city_id)
+        REFERENCES cities (city_id)
         ON DELETE SET NULL
         ON UPDATE CASCADE,
 
