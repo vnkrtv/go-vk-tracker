@@ -49,14 +49,15 @@ CREATE TABLE IF NOT EXISTS schools
 
 CREATE TABLE IF NOT EXISTS groups
 (
-    group_id    int4
+    group_id      int4
         not null,
-    name        text
+    name          text
         not null,
-    screen_name text
+    screen_name   text
         not null,
-    type        text,
-    is_closed   bool,
+    type          text,
+    members_count int4,
+    is_closed     bool,
 
     CONSTRAINT pk_groups PRIMARY KEY (group_id)
 );
@@ -73,6 +74,8 @@ CREATE TABLE IF NOT EXISTS photos
         not null,
     commented_ids  int4[]
         not null,
+    date           timestamp
+        not null,
 
     CONSTRAINT pk_photos PRIMARY KEY (photo_id)
 );
@@ -85,11 +88,18 @@ CREATE TABLE IF NOT EXISTS posts
         not null,
     comments_count int4
         not null,
+    reposts_count  int4
+        not null,
+    views_count    int4
+        not null,
     liked_ids      int4[]
         not null,
     commented_ids  int4[]
         not null,
-    text           text,
+    text           text
+        not null,
+    date           timestamp
+        not null,
 
     CONSTRAINT pk_posts PRIMARY KEY (post_id)
 );
