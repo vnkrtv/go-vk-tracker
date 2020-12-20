@@ -6,17 +6,17 @@ import (
 )
 
 type Country struct {
-	ID    int    `db:"country_id"`
+	ID    int32  `db:"country_id"`
 	Title string `db:"title"`
 }
 
 type City struct {
-	ID    int    `db:"city_id"`
+	ID    int32  `db:"city_id"`
 	Title string `db:"title"`
 }
 
 type University struct {
-	ID        int           `db:"university_id"`
+	ID        int32         `db:"university_id"`
 	Name      string        `db:"name"`
 	CountryID sql.NullInt32 `db:"country_id"`
 	CityID    sql.NullInt32 `db:"city_id"`
@@ -82,9 +82,9 @@ type User struct {
 	HomeTown       string        `db:"home_town"`
 	Universities   []int         `db:"universities"`
 	Schools        []int         `db:"schools"`
-	FriendsCount   bool          `db:"friends_count"`
+	FriendsCount   int           `db:"friends_count"`
 	FriendsIDs     []int         `db:"friends_ids"`
-	FollowersCount bool          `db:"followers_count"`
+	FollowersCount int           `db:"followers_count"`
 	FollowersIDs   []int         `db:"followers_ids"`
 	PostsCount     int           `db:"posts_count"`
 	PostsIDs       []int         `db:"posts_ids"`

@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
 	"strings"
 )
@@ -46,4 +47,14 @@ func main() {
 		return res;`
 	r := strings.NewReplacer("{posts}", "HUY", "{user_id}", "USID", )
 	fmt.Println(r.Replace(code))
+
+	type T struct {
+		A int `json:"a"`
+		B int `json:"b"`
+	}
+
+	jStr := []byte(`{"a": 12}`)
+	var m T
+	_ = json.Unmarshal(jStr, &m)
+	fmt.Printf("%#v\n", m)
 }

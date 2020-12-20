@@ -43,6 +43,30 @@ func (s *Storage) GetTrackingGroups() ([]string, error) {
 	return screenNames, err
 }
 
+func (s *Storage) AddTrackingUser(userID int) error {
+	sql := `
+		INSERT INTO 
+			tracking_users (user_id) 
+		VALUES 
+			($1)
+		ON CONFLICT (user_id)
+    		DO NOTHING`
+	_, err := s.db.NamedExec(sql, userID)
+	return err
+}
+
+func (s *Storage) AddTrackingGroup(screenName string) error {
+	sql := `
+		INSERT INTO 
+			tracking_groups (screen_name) 
+		VALUES 
+			($1)
+		ON CONFLICT (country_id)
+    		DO NOTHING`
+	_, err := s.db.NamedExec(sql, screenName)
+	return err
+}
+
 func (s *Storage) InsertCountry(country Country) error {
 	sql := `
 		INSERT INTO 

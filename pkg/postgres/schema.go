@@ -176,26 +176,16 @@ CREATE TABLE IF NOT EXISTS users
         not null,
     schools         int4[]
         not null,
-    friends_count   int4
-        not null,
-    friends_ids     int4[]
-        not null,
-    followers_count int4
-        not null,
-    followers_ids   int4[]
-        not null,
-    posts_count     int4
-        not null,
-    posts_ids       int4[]
-        not null,
-    photos_count    int4
-        not null,
-    photos_ids      int4[]
-        not null,
-    groups_count    int4
-        not null,
-    groups_ids      int4[]
-        not null,
+    friends_count   int4,
+    friends_ids     int4[],
+    followers_count int4,
+    followers_ids   int4[],
+    posts_count     int4,
+    posts_ids       int4[],
+    photos_count    int4,
+    photos_ids      int4[],
+    groups_count    int4,
+    groups_ids      int4[],
 
     CONSTRAINT pk_users PRIMARY KEY (user_id, collect_date),
 

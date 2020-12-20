@@ -1,31 +1,31 @@
 package vkapi
 
 type VKCountry struct {
-	ID    int    `json:"id"`
+	ID    int32  `json:"id"`
 	Title string `json:"title"`
 }
 
 type VKCity struct {
-	ID    int    `json:"id"`
+	ID    int32  `json:"id"`
 	Title string `json:"title"`
 }
 
 type VKUniversity struct {
 	ID        int    `json:"id"`
 	Name      string `json:"name"`
-	CityID    int    `json:"city"`
-	CountryID int    `json:"country"`
+	CityID    int32  `json:"city"`
+	CountryID int32  `json:"country"`
 }
 
 type VKSchool struct {
 	ID            int    `json:"id"`
 	Name          string `json:"name"`
-	YearFrom      int    `json:"year_from"`
-	YearTo        int    `json:"year_to"`
-	YearGraduated int    `json:"year_graduated"`
-	Type          int    `json:"type_str"`
-	CityID        int    `json:"city"`
-	CountryID     int    `json:"country_id"`
+	YearFrom      int32  `json:"year_from"`
+	YearTo        int32  `json:"year_to"`
+	YearGraduated int32  `json:"year_graduated"`
+	Type          string `json:"type_str"`
+	CityID        int32  `json:"city"`
+	CountryID     int32  `json:"country_id"`
 }
 
 type VKUser struct {
@@ -37,6 +37,7 @@ type VKUser struct {
 	Domain       string         `json:"domain"`
 	BDate        string         `json:"bdate"`
 	Status       string         `json:"status"`
+	Hometown     string         `json:"home_town"`
 	Verified     int            `json:"verified"`
 	Country      VKCountry      `json:"country"`
 	City         VKCity         `json:"city"`
@@ -65,11 +66,11 @@ type VKGroups struct {
 
 type VKPhoto struct {
 	ID       int    `json:"id"`
-	OwnerID  int    `json:"owner_id"`
-	Date     int    `json:"date"`
+	OwnerID  int32  `json:"owner_id"`
+	Date     int64  `json:"date"`
 	PostType string `json:"post_type"`
 	Text     string `json:"text"`
-	Likes struct {
+	Likes    struct {
 		Count int `json:"count"`
 	} `json:"likes"`
 	Reposts struct {
@@ -84,8 +85,8 @@ type VKPhotos struct {
 
 type VKPost struct {
 	ID       int    `json:"id"`
-	OwnerID  int    `json:"owner_id"`
-	Date     int    `json:"date"`
+	OwnerID  int32  `json:"owner_id"`
+	Date     int64  `json:"date"`
 	PostType string `json:"post_type"`
 	Text     string `json:"text"`
 	Comments struct {
