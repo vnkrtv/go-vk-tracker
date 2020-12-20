@@ -107,6 +107,12 @@ type VKPosts struct {
 	Items []VKPost `json:"items"`
 }
 
+type VKGroupInfo struct {
+	Count  int       `json:"count"`
+	Items  []VKPost  `json:"items"`
+	Groups []VKGroup `json:"groups"`
+}
+
 type VKUserInfo struct {
 	MainInfo  VKUser
 	Friends   VKUsers

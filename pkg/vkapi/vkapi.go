@@ -12,7 +12,8 @@ type VKTracker interface {
 	GetFollowers(userID int) (VKUsers, error)
 	GetGroups(userID int) (VKGroups, error)
 	GetPhotos(userID int) (VKPhotos, error)
-	GetPosts(userID int) (VKPosts, error)
+	GetUserPosts(userID int) (VKPosts, error)
+	GetGroupPosts(userID int) (VKPosts, error)
 }
 
 type VKAPi struct {
@@ -88,7 +89,7 @@ func (a *VKAPi) GetPhotos(userID int) (VKPhotos, error) {
 	return response, err
 }
 
-func (a *VKAPi) GetPosts(userID int) (VKPosts, error) {
+func (a *VKAPi) GetUserPosts(userID int) (VKPosts, error) {
 	var response VKPosts
 	err := a.api.CallMethod("wall.get", vk.RequestParams{
 		"owner_id": userID,
@@ -98,7 +99,20 @@ func (a *VKAPi) GetPosts(userID int) (VKPosts, error) {
 	return response, err
 }
 
-func (a *VKAPi) GetAllInfo(userID int) (*VKUserInfo, error) {
+func (a *VKAPi) GetGroupPosts(screenName string) (VKGroupInfo, error) {
+	var response VKGroupInfo
+	fields := "id,name,screen_name,members_count"
+	err := a.api.CallMethod("wall.get", vk.RequestParams{
+		"domain": screenName,
+		"count": 100,
+		"fields": fields,
+		"extended": 1,
+		"v": a.apiVersion,
+	}, &response)
+	return response, err
+}
+
+func (a *VKAPi) GetUserInfo(userID int) (*VKUserInfo, error) {
 	user, err := a.GetUser(userID)
 	if err != nil {
 		return nil, err
@@ -123,7 +137,7 @@ func (a *VKAPi) GetAllInfo(userID int) (*VKUserInfo, error) {
 	}
 
 	time.Sleep(time.Duration(a.timeout) * time.Second)
-	posts, err := a.GetPosts(userID)
+	posts, err := a.GetUserPosts(userID)
 	if err != nil {
 		return nil, err
 	}
@@ -142,4 +156,12 @@ func (a *VKAPi) GetAllInfo(userID int) (*VKUserInfo, error) {
 		Posts:     posts,
 		Photos:    photos,
 	}, err
+}
+
+func (a *VKAPi) GetGroupInfo(screenName string) (VKGroup, []VKPost, error) {
+	response, err := a.GetGroupPosts(screenName)
+	if err != nil {
+		return VKGroup{}, nil, err
+	}
+	return response.Groups[0], response.Items, err
 }

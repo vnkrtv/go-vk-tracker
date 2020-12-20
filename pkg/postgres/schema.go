@@ -214,4 +214,18 @@ CREATE TABLE IF NOT EXISTS users
         ON DELETE SET NULL
         ON UPDATE CASCADE
 );
+
+CREATE TABLE IF NOT EXISTS tracking_groups
+(
+    screen_name text,
+
+    CONSTRAINT pk_tracking_groups PRIMARY KEY (screen_name)
+);
+
+CREATE TABLE IF NOT EXISTS tracking_users
+(
+    user_id int4,
+
+    CONSTRAINT pk_tracking_users PRIMARY KEY (user_id)
+);
 `
