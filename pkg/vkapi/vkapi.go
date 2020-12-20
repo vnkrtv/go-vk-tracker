@@ -24,10 +24,7 @@ func NewVKApi(token, apiVersion string) (*VKAPi, error) {
 
 func (a *VKAPi) GetUser(userID int) (VKUser, error) {
 	var user VKUser
-	fields := `counters,photo_id,verified,sex,bdate,city,country,home_town,
-			   domain,contacts,site,education,universities,schools,status,
-			   followers_count,occupation,relatives,relation,personal,
-			   connections,activities,interests,about,career`
+	fields := `home_town,schools,status,domain,sex,bdate,country,city,contacts,universities`
 	err := a.api.CallMethod("users.get", vk.RequestParams{
 		"user_ids": userID,
 		"fields": fields,
@@ -36,11 +33,34 @@ func (a *VKAPi) GetUser(userID int) (VKUser, error) {
 	return user, err
 }
 
-func (a *VKAPi) GetFriends(userID int) (VKFriends, error) {
-	var response VKFriends
-	fields := "schools,status,domain,sex,bdate,country,city,contacts,universities "
+func (a *VKAPi) GetFriends(userID int) (VKUsers, error) {
+	var response VKUsers
+	fields := "home_town,schools,status,domain,sex,bdate,country,city,contacts,universities"
 	err := a.api.CallMethod("friends.get", vk.RequestParams{
 		"user_ids": userID,
+		"fields": fields,
+		"v": a.apiVersion,
+	}, &response)
+	return response, err
+}
+
+func (a *VKAPi) GetFollowers(userID int) (VKUsers, error) {
+	var response VKUsers
+	fields := "home_town,schools,status,domain,sex,bdate,country,city,contacts,universities"
+	err := a.api.CallMethod("users.getFollowers", vk.RequestParams{
+		"user_id": userID,
+		"fields": fields,
+		"v": a.apiVersion,
+	}, &response)
+	return response, err
+}
+
+func (a *VKAPi) GetGroups(userID int) (VKGroups, error) {
+	var response VKGroups
+	fields := "id,name,screen_name,members_count"
+	err := a.api.CallMethod("groups.get", vk.RequestParams{
+		"user_id": userID,
+		"extended": 1,
 		"fields": fields,
 		"v": a.apiVersion,
 	}, &response)

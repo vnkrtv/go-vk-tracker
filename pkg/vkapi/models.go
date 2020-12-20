@@ -1,26 +1,5 @@
 package vkapi
 
-type VKFriends struct {
-	Count int        `json:"count"`
-	Items []VKFriend `json:"items"`
-}
-
-type VKFriend struct {
-	ID           int            `json:"id"`
-	FirstName    string         `json:"first_name"`
-	LastName     string         `json:"last_name"`
-	IsClosed     bool           `json:"is_closed"`
-	Sex          int            `json:"sex"`
-	Domain       string         `json:"domain"`
-	BDate        string         `json:"bdate"`
-	Status       string         `json:"status"`
-	Verified     int            `json:"verified"`
-	Country      VKCountry      `json:"country"`
-	City         VKCity         `json:"city"`
-	Universities []VKUniversity `json:"universities"`
-	Schools      []VKSchool     `json:"schools"`
-}
-
 type VKCountry struct {
 	ID    int    `json:"id"`
 	Title string `json:"title"`
@@ -59,15 +38,29 @@ type VKUser struct {
 	BDate        string         `json:"bdate"`
 	Status       string         `json:"status"`
 	Verified     int            `json:"verified"`
-	UniversityID int            `json:"university"`
-	HomeTown     string         `json:"home_town"`
 	Country      VKCountry      `json:"country"`
+	City         VKCity         `json:"city"`
 	Universities []VKUniversity `json:"universities"`
 	Schools      []VKSchool     `json:"schools"`
 }
 
-type VKFriend struct {
+type VKGroup struct {
+	ID           int    `json:"id"`
+	ScreenName   string `json:"screen_name"`
+	Name         string `json:"name"`
+	MembersCount int    `json:"members_count"`
+	Type         string `json:"type"`
+	IsClosed     bool   `json:"is_closed"`
+}
 
+type VKUsers struct {
+	Count int      `json:"count"`
+	Items []VKUser `json:"items"`
+}
+
+type VKGroups struct {
+	Count int      `json:"count"`
+	Items []VKGroup `json:"items"`
 }
 
 type VKPost struct {

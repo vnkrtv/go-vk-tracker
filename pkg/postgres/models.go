@@ -19,7 +19,7 @@ type University struct {
 	ID        int           `db:"university_id"`
 	Name      string        `db:"name"`
 	CountryID sql.NullInt32 `db:"country_id"`
-	CityID        sql.NullInt32  `db:"city_id"`
+	CityID    sql.NullInt32 `db:"city_id"`
 }
 
 type School struct {
@@ -34,12 +34,12 @@ type School struct {
 }
 
 type Group struct {
-	ID           int            `db:"group_id"`
-	ScreenName   string         `db:"screen_name"`
-	Name         string         `db:"name"`
-	MembersCount sql.NullInt32  `db:"members_count"`
-	Type         sql.NullString `db:"type"`
-	IsClosed     sql.NullBool   `db:"is_closed"`
+	ID           int    `db:"group_id"`
+	ScreenName   string `db:"screen_name"`
+	Name         string `db:"name"`
+	MembersCount int    `db:"members_count"`
+	Type         string `db:"type"`
+	IsClosed     bool   `db:"is_closed"`
 }
 
 type Photo struct {
@@ -74,7 +74,6 @@ type User struct {
 	CollectDate    time.Time     `db:"collect_date"`
 	Status         string        `db:"status"`
 	Verified       bool          `db:"verified"`
-	UniversityID   sql.NullInt32 `db:"university_id"`
 	CountryID      sql.NullInt32 `db:"country_id"`
 	HomeTown       string        `db:"home_town"`
 	Universities   []int         `db:"universities"`

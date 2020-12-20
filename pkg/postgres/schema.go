@@ -77,9 +77,12 @@ CREATE TABLE IF NOT EXISTS groups
         not null,
     screen_name   text
         not null,
-    type          text,
-    members_count int4,
-    is_closed     bool,
+    type          text
+        not null,
+    members_count int4
+        not null,
+    is_closed     bool
+        not null,
 
     CONSTRAINT pk_groups PRIMARY KEY (group_id)
 );
@@ -149,7 +152,6 @@ CREATE TABLE IF NOT EXISTS users
         not null,
     verified        bool
         not null,
-    university_id   int2,
     country_id      int2,
     city_id         int2,
     home_town       text
