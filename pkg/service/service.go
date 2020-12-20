@@ -65,9 +65,47 @@ func (s *VKLoader) LoadUsersInfo() error {
 		if err != nil {
 			log.Printf("Error on getting user info: %s", err)
 		} else {
-			country := parseVKCountry(userInfo.MainInfo.Country)
+			user, country, city := parseTrackingUser(*userInfo)
+			if err = s.db.InsertCountry(country); err != nil {
+				log.Printf("Error on inserting country in db: %s", err)
+			}
+			if err = s.db.InsertCity(city); err != nil {
+				log.Printf("Error on inserting city in db: %s", err)
+			}
 
-			city := parseVKCity(userInfo.MainInfo.City)
+			universities, countries, cities := parseVKUniversities(userInfo.MainInfo.Universities)
+			if err = s.db.InsertCountries(countries); err != nil {
+				log.Printf("Error on inserting country in db: %s", err)
+			}
+			if err = s.db.InsertCities(cities); err != nil {
+				log.Printf("Error on inserting city in db: %s", err)
+			}
+			if err = s.db.InsertUniversities(universities); err != nil {
+				log.Printf("Error on inserting university in db: %s", err)
+			}
+
+			schools, countries, cities := parseVKSchools(userInfo.MainInfo.Schools)
+			if err = s.db.InsertCountries(countries); err != nil {
+				log.Printf("Error on inserting country in db: %s", err)
+			}
+			if err = s.db.InsertCities(cities); err != nil {
+				log.Printf("Error on inserting city in db: %s", err)
+			}
+			if err = s.db.InsertSchools(schools); err != nil {
+				log.Printf("Error on inserting school in db: %s", err)
+			}
+
+			groups := parseVKGroups(userInfo.Groups.Items)
+			if err = s.db.InsertGroups(groups); err != nil {
+				log.Printf("Error on inserting group in db: %s", err)
+			}
+
+			if err = s.db.InsertUser(user); err != nil {
+				log.Printf("Error on inserting user in db: %s", err)
+			}
+
+			for _, friend := range parseVK
+
 		}
 
 	}

@@ -33,7 +33,7 @@ func NewVKApi(token, apiVersion string, timeout float32) (*VKAPi, error) {
 	}, err
 }
 
-func (a *VKAPi) GetUser(userID int) (VKUser, error) {
+func (a *VKAPi) GetUser(userID int32) (VKUser, error) {
 	var user VKUser
 	fields := `home_town,schools,status,domain,sex,bdate,country,city,contacts,universities`
 	err := a.api.CallMethod("users.get", vk.RequestParams{
@@ -44,7 +44,7 @@ func (a *VKAPi) GetUser(userID int) (VKUser, error) {
 	return user, err
 }
 
-func (a *VKAPi) GetFriends(userID int) (VKUsers, error) {
+func (a *VKAPi) GetFriends(userID int32) (VKUsers, error) {
 	var response VKUsers
 	fields := "home_town,schools,status,domain,sex,bdate,country,city,contacts,universities"
 	err := a.api.CallMethod("friends.get", vk.RequestParams{
@@ -55,7 +55,7 @@ func (a *VKAPi) GetFriends(userID int) (VKUsers, error) {
 	return response, err
 }
 
-func (a *VKAPi) GetFollowers(userID int) (VKUsers, error) {
+func (a *VKAPi) GetFollowers(userID int32) (VKUsers, error) {
 	var response VKUsers
 	fields := "home_town,schools,status,domain,sex,bdate,country,city,contacts,universities"
 	err := a.api.CallMethod("users.getFollowers", vk.RequestParams{
@@ -66,7 +66,7 @@ func (a *VKAPi) GetFollowers(userID int) (VKUsers, error) {
 	return response, err
 }
 
-func (a *VKAPi) GetGroups(userID int) (VKGroups, error) {
+func (a *VKAPi) GetGroups(userID int32) (VKGroups, error) {
 	var response VKGroups
 	fields := "id,name,screen_name,members_count"
 	err := a.api.CallMethod("groups.get", vk.RequestParams{
@@ -78,7 +78,7 @@ func (a *VKAPi) GetGroups(userID int) (VKGroups, error) {
 	return response, err
 }
 
-func (a *VKAPi) GetPhotos(userID int) (VKPhotos, error) {
+func (a *VKAPi) GetPhotos(userID int32) (VKPhotos, error) {
 	var response VKPhotos
 	err := a.api.CallMethod("photos.getAll", vk.RequestParams{
 		"owner_id": userID,
@@ -89,7 +89,7 @@ func (a *VKAPi) GetPhotos(userID int) (VKPhotos, error) {
 	return response, err
 }
 
-func (a *VKAPi) GetUserPosts(userID int) (VKPosts, error) {
+func (a *VKAPi) GetUserPosts(userID int32) (VKPosts, error) {
 	var response VKPosts
 	err := a.api.CallMethod("wall.get", vk.RequestParams{
 		"owner_id": userID,
@@ -112,7 +112,7 @@ func (a *VKAPi) GetGroupPosts(screenName string) (VKGroupInfo, error) {
 	return response, err
 }
 
-func (a *VKAPi) GetUserInfo(userID int) (*VKUserInfo, error) {
+func (a *VKAPi) GetUserInfo(userID int32) (*VKUserInfo, error) {
 	user, err := a.GetUser(userID)
 	if err != nil {
 		return nil, err

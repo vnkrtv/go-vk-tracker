@@ -11,7 +11,7 @@ type VKCity struct {
 }
 
 type VKUniversity struct {
-	ID        int    `json:"id"`
+	ID        int32  `json:"id"`
 	Name      string `json:"name"`
 	CityID    int32  `json:"city"`
 	CountryID int32  `json:"country"`

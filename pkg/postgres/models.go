@@ -79,8 +79,9 @@ type User struct {
 	Status         string        `db:"status"`
 	Verified       bool          `db:"verified"`
 	CountryID      sql.NullInt32 `db:"country_id"`
+	CityID         sql.NullInt32 `db:"city_id"`
 	HomeTown       string        `db:"home_town"`
-	Universities   []int         `db:"universities"`
+	Universities   []int32       `db:"universities"`
 	Schools        []int         `db:"schools"`
 	FriendsCount   int           `db:"friends_count"`
 	FriendsIDs     []int         `db:"friends_ids"`

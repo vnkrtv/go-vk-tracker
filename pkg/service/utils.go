@@ -21,21 +21,35 @@ func parseVKCity(city vk.VKCity) pg.City {
 	}
 }
 
-func parseVKUniversity(university vk.VKUniversity) pg.University {
-	return pg.University{
-		ID:        university.ID,
-		Name:      university.Name,
-		CountryID: sql.NullInt32{Int32: university.CountryID, Valid: true},
-		CityID:    sql.NullInt32{Int32: university.CityID, Valid: true},
+func parseVKUniversity(vkUniversity vk.VKUniversity) (pg.University, pg.Country, pg.City) {
+	country := pg.Country{
+		ID:    vkUniversity.CountryID,
+		Title: "",
 	}
+	city := pg.City{
+		ID:    vkUniversity.CityID,
+		Title: "",
+	}
+	university := pg.University{
+		ID:        vkUniversity.ID,
+		Name:      vkUniversity.Name,
+		CountryID: sql.NullInt32{Int32: vkUniversity.CountryID, Valid: true},
+		CityID:    sql.NullInt32{Int32: vkUniversity.CityID, Valid: true},
+	}
+	return university, country, city
 }
 
-func parseVKUniversities(vkUniversities []vk.VKUniversity) []pg.University {
+func parseVKUniversities(vkUniversities []vk.VKUniversity) ([]pg.University, []pg.Country, []pg.City) {
 	universities := make([]pg.University, len(vkUniversities))
+	countries := make([]pg.Country, len(vkUniversities))
+	cities := make([]pg.City, len(vkUniversities))
 	for i := range universities {
-		universities[i] = parseVKUniversity(vkUniversities[i])
+		university, country, city := parseVKUniversity(vkUniversities[i])
+		universities[i] = university
+		countries[i] = country
+		cities[i] = city
 	}
-	return universities
+	return universities, countries, cities
 }
 
 func parseVKSchool(vkSchool vk.VKSchool) (pg.School, pg.Country, pg.City) {
@@ -102,8 +116,8 @@ func parseVKPost(post vk.VKPost) pg.Post {
 		CommentsCount: post.Comments.Count,
 		ViewsCount:    post.Views.Count,
 		RepostsCount:  post.Reposts.Count,
-		LikedIDs:      []int{},  // coming soon ..
-		CommentedIDs:  []int{},  // coming soon ..
+		LikedIDs:      []int{}, // coming soon ..
+		CommentedIDs:  []int{}, // coming soon ..
 	}
 }
 
@@ -122,10 +136,10 @@ func parseVKPhoto(post vk.VKPhoto) pg.Photo {
 		Date:          time.Unix(post.Date, 0),
 		Text:          post.Text,
 		LikesCount:    post.Likes.Count,
-		CommentsCount: 0,  // coming soon ..
+		CommentsCount: 0, // coming soon ..
 		RepostsCount:  post.Reposts.Count,
-		LikedIDs:      []int{},  // coming soon ..
-		CommentedIDs:  []int{},  // coming soon ..
+		LikedIDs:      []int{}, // coming soon ..
+		CommentedIDs:  []int{}, // coming soon ..
 	}
 }
 
@@ -137,13 +151,52 @@ func parseVKPhotos(vkPhotos []vk.VKPhoto) []pg.Photo {
 	return photos
 }
 
-func parseVKUser(userInfo vk.VKUserInfo) pg.User {
+func parseVKUser(vkUser vk.VKUser) (pg.User, pg.Country, pg.City) {
+	country := pg.Country{
+		ID:    vkUser.Country.ID,
+		Title: vkUser.Country.Title,
+	}
+	city := pg.City{
+		ID:    vkUser.City.ID,
+		Title: vkUser.City.Title,
+	}
+	user := pg.User{
+		ID:             vkUser.ID,
+		FirstName:      vkUser.FirstName,
+		LastName:       vkUser.LastName,
+		IsClosed:       vkUser.IsClosed,
+		Sex:            vkUser.Sex,
+		Domain:         vkUser.Domain,
+		BDate:          vkUser.BDate,
+		CollectDate:    time.Now(),
+		Status:         vkUser.Status,
+		Verified:       vkUser.Verified == 1,
+		CountryID:      sql.NullInt32{Int32: vkUser.Country.ID, Valid: true},
+		CityID:         sql.NullInt32{Int32: vkUser.City.ID, Valid: true},
+		HomeTown:       vkUser.Hometown,
+		Universities:   []int32{},
+		Schools:        []int{},
+		FriendsCount:   -1,
+		FriendsIDs:     []int{},
+		FollowersCount: -1,
+		FollowersIDs:   []int{},
+		PostsCount:     -1,
+		PostsIDs:       []int{},
+		PhotosCount:    -1,
+		PhotosIDs:      []int{},
+		GroupsCount:    -1,
+		GroupsIDs:      []int{},
+	}
+	return user, country, city
+}
+
+func parseTrackingUser(userInfo vk.VKUserInfo) (pg.User, pg.Country, pg.City) {
 	schoolsIDs := make([]int, len(userInfo.MainInfo.Schools))
 	for i := range schoolsIDs {
 		schoolsIDs[i] = userInfo.MainInfo.Schools[i].ID
 	}
 
-	universitiesIDs := make([]int, len(userInfo.MainInfo.Universities))
+	universitiesIDs := make([]int32, len(userInfo.MainInfo.Universities))
 	for i := range universitiesIDs {
 		universitiesIDs[i] = userInfo.MainInfo.Universities[i].ID
 	}
@@ -173,7 +226,15 @@ func parseVKUser(userInfo vk.VKUserInfo) pg.User {
 		groupsIDs[i] = userInfo.Groups.Items[i].ID
 	}
 
-	return pg.User{
+	country := pg.Country{
+		ID:    userInfo.MainInfo.Country.ID,
+		Title: userInfo.MainInfo.Country.Title,
+	}
+	city := pg.City{
+		ID:    userInfo.MainInfo.City.ID,
+		Title: userInfo.MainInfo.City.Title,
+	}
+	user := pg.User{
 		ID:             userInfo.MainInfo.ID,
 		FirstName:      userInfo.MainInfo.FirstName,
 		LastName:       userInfo.MainInfo.LastName,
@@ -185,6 +246,7 @@ func parseVKUser(userInfo vk.VKUserInfo) pg.User {
 		Status:         userInfo.MainInfo.Status,
 		Verified:       userInfo.MainInfo.Verified == 1,
 		CountryID:      sql.NullInt32{Int32: userInfo.MainInfo.Country.ID, Valid: true},
+		CityID:         sql.NullInt32{Int32: userInfo.MainInfo.City.ID, Valid: true},
 		HomeTown:       userInfo.MainInfo.Hometown,
 		Universities:   universitiesIDs,
 		Schools:        schoolsIDs,
@@ -199,4 +261,5 @@ func parseVKUser(userInfo vk.VKUserInfo) pg.User {
 		GroupsCount:    userInfo.Groups.Count,
 		GroupsIDs:      groupsIDs,
 	}
+	return user, country, city
 }

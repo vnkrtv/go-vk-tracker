@@ -228,18 +228,18 @@ func (s *Storage) InsertGroups(groups []Group) error {
 func (s *Storage) InsertUser(user User) error {
 	sql := `
 		INSERT INTO 
-			users (user_id, first_name, last_name, is_closed, sex, domain, bdate, 
+			users (user_id, first_name, last_name, is_closed, sex, domain, bdate, city_id,
 			       collect_date, status, verified, country_id, home_town, universities,
 			       schools, friends_count, friends_ids, followers_count, followers_ids,
 			       posts_count, posts_ids, photos_count, photos_ids, groups_count, groups_ids) 
 		VALUES 
-			(:user_id, :first_name, :last_name, :is_closed, :sex, :domain, :bdate, 
+			(:user_id, :first_name, :last_name, :is_closed, :sex, :domain, :bdate, :city_id,
 			 :collect_date, :status, :verified, :country_id, :home_town, :universities,
 			 :schools, :friends_count, :friends_ids, :followers_count, :followers_ids
 			 :posts_count, :posts_ids, :photos_count, :photos_ids, :groups_count, :groups_ids)
 		ON CONFLICT (user_id, collect_date)
     		DO UPDATE SET
-    			first_name = :first_name, last_name = :last_name, is_closed = :is_closed,
+    			first_name = :first_name, last_name = :last_name, is_closed = :is_closed, city_id = :city_id,
     			domain = :domain, bdate = :bdate, status = :status, verified = :verified,
     		    country_id = :country_id, home_town = :home_town, universities = :universities,
     		    schools = :schools, friends_count = :friends_count, friends_ids = :friends_ids,
