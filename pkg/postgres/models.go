@@ -43,24 +43,28 @@ type Group struct {
 }
 
 type Photo struct {
-	ID            int       `db:"photo_id"`
-	Date          time.Time `db:"date"`
-	LikesCount    int       `db:"likes_count"`
-	CommentsCount int       `db:"comments_count"`
-	LikedIDs      []int     `db:"liked_ids"`
-	CommentedIDs  []int     `db:"commented_ids"`
+	ID            int           `db:"photo_id"`
+	OwnerID       sql.NullInt32 `db:"owner_id"`
+	Date          time.Time     `db:"date"`
+	Text          string        `db:"text"`
+	LikesCount    int           `db:"likes_count"`
+	CommentsCount int           `db:"comments_count"`
+	RepostsCount  int           `db:"reposts_count"`
+	LikedIDs      []int         `db:"liked_ids"`
+	CommentedIDs  []int         `db:"commented_ids"`
 }
 
 type Post struct {
-	ID            int       `db:"post_id"`
-	Date          time.Time `db:"date"`
-	Text          string    `db:"text"`
-	LikesCount    int       `db:"likes_count"`
-	CommentsCount int       `db:"comments_count"`
-	ViewsCount    int       `db:"views_count"`
-	RepostsCount  int       `db:"reposts_count"`
-	LikedIDs      []int     `db:"liked_ids"`
-	CommentedIDs  []int     `db:"commented_ids"`
+	ID            int           `db:"post_id"`
+	OwnerID       sql.NullInt32 `db:"owner_id"`
+	Date          time.Time     `db:"date"`
+	Text          string        `db:"text"`
+	LikesCount    int           `db:"likes_count"`
+	CommentsCount int           `db:"comments_count"`
+	ViewsCount    int           `db:"views_count"`
+	RepostsCount  int           `db:"reposts_count"`
+	LikedIDs      []int         `db:"liked_ids"`
+	CommentedIDs  []int         `db:"commented_ids"`
 }
 
 type User struct {

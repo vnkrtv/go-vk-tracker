@@ -44,6 +44,11 @@ type VKUser struct {
 	Schools      []VKSchool     `json:"schools"`
 }
 
+type VKUsers struct {
+	Count int      `json:"count"`
+	Items []VKUser `json:"items"`
+}
+
 type VKGroup struct {
 	ID           int    `json:"id"`
 	ScreenName   string `json:"screen_name"`
@@ -53,32 +58,60 @@ type VKGroup struct {
 	IsClosed     bool   `json:"is_closed"`
 }
 
-type VKUsers struct {
-	Count int      `json:"count"`
-	Items []VKUser `json:"items"`
-}
-
 type VKGroups struct {
-	Count int      `json:"count"`
+	Count int       `json:"count"`
 	Items []VKGroup `json:"items"`
 }
 
+type VKPhoto struct {
+	ID       int    `json:"id"`
+	OwnerID  int    `json:"owner_id"`
+	Date     int    `json:"date"`
+	PostType string `json:"post_type"`
+	Text     string `json:"text"`
+	Likes struct {
+		Count int `json:"count"`
+	} `json:"likes"`
+	Reposts struct {
+		Count int `json:"count"`
+	} `json:"reposts"`
+}
+
+type VKPhotos struct {
+	Count int       `json:"count"`
+	Items []VKPhoto `json:"items"`
+}
+
 type VKPost struct {
-	ID          int             `json:"id"`
-	Date        int             `json:"date"`
-	PostType    string          `json:"post_type"`
-	Text        string          `json:"text"`
-	IsPinned    int8            `json:"is_pinned"`
-	Comments    struct {
-		Count		int	     		 `json:"count"`
-	}                           `json:"comments"`
-	Likes       struct {
-		Count		int  			 `json:"count"`
-	}                           `json:"likes"`
-	Reposts     struct {
-		Count		int  			 `json:"count"`
-	}                           `json:"reposts"`
-	Views       struct {
-		Count		int 			 `json:"count"`
-	}                           `json:"views"`
+	ID       int    `json:"id"`
+	OwnerID  int    `json:"owner_id"`
+	Date     int    `json:"date"`
+	PostType string `json:"post_type"`
+	Text     string `json:"text"`
+	Comments struct {
+		Count int `json:"count"`
+	} `json:"comments"`
+	Likes struct {
+		Count int `json:"count"`
+	} `json:"likes"`
+	Reposts struct {
+		Count int `json:"count"`
+	} `json:"reposts"`
+	Views struct {
+		Count int `json:"count"`
+	} `json:"views"`
+}
+
+type VKPosts struct {
+	Count int      `json:"count"`
+	Items []VKPost `json:"items"`
+}
+
+type VKUserInfo struct {
+	MainInfo  VKUser
+	Friends   VKUsers
+	Followers VKUsers
+	Groups    VKGroups
+	Posts     VKPosts
+	Photos    VKPhotos
 }

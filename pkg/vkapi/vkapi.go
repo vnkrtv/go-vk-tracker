@@ -1,24 +1,34 @@
 package vkapi
 
 import (
-	"fmt"
-	"strconv"
+	"time"
 
 	"github.com/go-vk-api/vk"
 )
 
+type VKTracker interface {
+	GetUser(userID int) (VKUser, error)
+	GetFriends(userID int) (VKUsers, error)
+	GetFollowers(userID int) (VKUsers, error)
+	GetGroups(userID int) (VKGroups, error)
+	GetPhotos(userID int) (VKPhotos, error)
+	GetPosts(userID int) (VKPosts, error)
+}
+
 type VKAPi struct {
 	api        *vk.Client
 	apiVersion string
+	timeout    float32
 }
 
-func NewVKApi(token, apiVersion string) (*VKAPi, error) {
+func NewVKApi(token, apiVersion string, timeout float32) (*VKAPi, error) {
 	api, err := vk.NewClientWithOptions(
 		vk.WithToken(token),
 	)
 	return &VKAPi{
 		api: api,
 		apiVersion: apiVersion,
+		timeout: timeout,
 	}, err
 }
 
@@ -67,35 +77,69 @@ func (a *VKAPi) GetGroups(userID int) (VKGroups, error) {
 	return response, err
 }
 
-func (a *VKAPi) GetGroupsPosts(groupsScreenNames []string, postsCount int) (map[string]VKWall, error) {
-	groups := make([]string, len(groupsScreenNames))
-	for i, str := range groupsScreenNames {
-		groups[i] = fmt.Sprintf("%s", strconv.Quote(str))
-		if i != len(groups) - 1{
-			groups[i] += ","
-		}
-	}
-	var response []VKWall
-	code := `
-        var domains = %s;
-		var res = [];
-		var i = 0;
-		while (i < domains.length) {
-			var posts = API.wall.get({
-				domain: domains[i], 
-				count: %d,
-				offset: 1
-			});
-			res.push(posts);
-			i = i + 1; 
-		}
-		return res;`
-	err := a.api.CallMethod("execute", vk.RequestParams{
-		"code": fmt.Sprintf(code, groups, postsCount),
+func (a *VKAPi) GetPhotos(userID int) (VKPhotos, error) {
+	var response VKPhotos
+	err := a.api.CallMethod("photos.getAll", vk.RequestParams{
+		"owner_id": userID,
+		"count": 200,
+		"extended": 1,
+		"v": a.apiVersion,
 	}, &response)
-	wallMap := make(map[string]VKWall, len(groups))
-	for i, wall := range response {
-		wallMap[groupsScreenNames[i]] = wall
+	return response, err
+}
+
+func (a *VKAPi) GetPosts(userID int) (VKPosts, error) {
+	var response VKPosts
+	err := a.api.CallMethod("wall.get", vk.RequestParams{
+		"owner_id": userID,
+		"count": 100,
+		"v": a.apiVersion,
+	}, &response)
+	return response, err
+}
+
+func (a *VKAPi) GetAllInfo(userID int) (*VKUserInfo, error) {
+	user, err := a.GetUser(userID)
+	if err != nil {
+		return nil, err
 	}
-	return wallMap, err
+
+	time.Sleep(time.Duration(a.timeout) * time.Second)
+	friends, err := a.GetFriends(userID)
+	if err != nil {
+		return nil, err
+	}
+
+	time.Sleep(time.Duration(a.timeout) * time.Second)
+	followers, err := a.GetFollowers(userID)
+	if err != nil {
+		return nil, err
+	}
+
+	time.Sleep(time.Duration(a.timeout) * time.Second)
+	groups, err := a.GetGroups(userID)
+	if err != nil {
+		return nil, err
+	}
+
+	time.Sleep(time.Duration(a.timeout) * time.Second)
+	posts, err := a.GetPosts(userID)
+	if err != nil {
+		return nil, err
+	}
+
+	time.Sleep(time.Duration(a.timeout) * time.Second)
+	photos, err := a.GetPhotos(userID)
+	if err != nil {
+		return nil, err
+	}
+
+	return &VKUserInfo{
+		MainInfo:  user,
+		Friends:   friends,
+		Followers: followers,
+		Groups:    groups,
+		Posts:     posts,
+		Photos:    photos,
+	}, err
 }
