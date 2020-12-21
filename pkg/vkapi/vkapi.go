@@ -19,7 +19,7 @@ type VKTracker interface {
 type VKAPi struct {
 	api        *vk.Client
 	apiVersion string
-	timeout    float32
+	Timeout    float32
 }
 
 func NewVKApi(token, apiVersion string, timeout float32) (*VKAPi, error) {
@@ -27,9 +27,9 @@ func NewVKApi(token, apiVersion string, timeout float32) (*VKAPi, error) {
 		vk.WithToken(token),
 	)
 	return &VKAPi{
-		api: api,
+		api:        api,
 		apiVersion: apiVersion,
-		timeout: timeout,
+		Timeout:    timeout,
 	}, err
 }
 
@@ -118,31 +118,31 @@ func (a *VKAPi) GetUserInfo(userID int32) (*VKUserInfo, error) {
 		return nil, err
 	}
 
-	time.Sleep(time.Duration(a.timeout) * time.Second)
+	time.Sleep(time.Duration(a.Timeout) * time.Second)
 	friends, err := a.GetFriends(userID)
 	if err != nil {
 		return nil, err
 	}
 
-	time.Sleep(time.Duration(a.timeout) * time.Second)
+	time.Sleep(time.Duration(a.Timeout) * time.Second)
 	followers, err := a.GetFollowers(userID)
 	if err != nil {
 		return nil, err
 	}
 
-	time.Sleep(time.Duration(a.timeout) * time.Second)
+	time.Sleep(time.Duration(a.Timeout) * time.Second)
 	groups, err := a.GetGroups(userID)
 	if err != nil {
 		return nil, err
 	}
 
-	time.Sleep(time.Duration(a.timeout) * time.Second)
+	time.Sleep(time.Duration(a.Timeout) * time.Second)
 	posts, err := a.GetUserPosts(userID)
 	if err != nil {
 		return nil, err
 	}
 
-	time.Sleep(time.Duration(a.timeout) * time.Second)
+	time.Sleep(time.Duration(a.Timeout) * time.Second)
 	photos, err := a.GetPhotos(userID)
 	if err != nil {
 		return nil, err
