@@ -43,7 +43,7 @@ func (s *Storage) GetTrackingGroups() ([]string, error) {
 	return screenNames, err
 }
 
-func (s *Storage) AddTrackingUser(userID int) error {
+func (s *Storage) AddTrackingUser(userID int32) error {
 	sql := `
 		INSERT INTO 
 			tracking_users (user_id) 

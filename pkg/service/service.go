@@ -5,8 +5,8 @@ import (
 	"log"
 	"time"
 
-	pg "../postgres"
-	vk "../vkapi"
+	pg "github.com/vnkrtv/go-vk-tracker/pkg/postgres"
+	vk "github.com/vnkrtv/go-vk-tracker/pkg/vkapi"
 )
 
 var (
@@ -34,11 +34,16 @@ func NewVKLoader(vkToken, apiVersion string, timeout float32, pgUser, pgPass, pg
 	}, err
 }
 
+func NewVKLoaderFromCfg(cfg Config) (*VKLoader, error) {
+	return NewVKLoader(cfg.VKToken, cfg.VKApiVersion, cfg.Timeout,
+		cfg.PGUser, cfg.PGPass, cfg.PGHost, cfg.PGPort, cfg.PGName)
+}
+
 func (s *VKLoader) InitDB() error {
 	return s.db.CreateSchema()
 }
 
-func (s *VKLoader) AddTrackingUsers(usersIDs []int) error {
+func (s *VKLoader) AddTrackingUsers(usersIDs []int32) error {
 	for _, userID := range usersIDs {
 		if err := s.db.AddTrackingUser(userID); err != nil {
 			return err
@@ -78,6 +83,7 @@ func (s *VKLoader) LoadGroupsInfo() error {
 			log.Printf("Error on inserting post in db: %s", err)
 		}
 	}
+	return nil
 }
 
 func (s *VKLoader) LoadUsersInfo() error {
