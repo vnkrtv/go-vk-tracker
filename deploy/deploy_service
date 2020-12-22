@@ -1,0 +1,57 @@
+#!/bin/bash
+
+VK_API_V=5.126
+TIMEOUT=0.34
+
+read -r -p "VK Token: " VK_TOKEN
+if [ "${VK_TOKEN}" == "" ]
+then
+  echo "Error: VK Token must be specify"
+  exit 1
+fi
+
+read -r -p "PostgreSQL user (default: postgres): " PG_USER
+if [ "${PG_USER}" == "" ]
+then
+  PG_USER=postgres
+fi
+
+read -r -p "PostgreSQL password: " PG_PASS
+if [ "${PG_PASS}" == "" ]
+then
+  echo "Error: PostgreSQL password must be specify"
+  exit 1
+fi
+
+read -r -p "PostgreSQL db name (default: vkgroups): " PG_NAME
+if [ "${PG_NAME}" == "" ]
+then
+  PG_NAME=vkgroups
+fi
+
+export PG_HOST=db
+export PH_PORT=5432
+export PG_USER="${PG_USER}"
+export PG_PASS="${PG_PASS}"
+export PG_NAME="${PG_NAME}"
+
+cat > config/config.json <<- EOM
+{
+  "pguser":   "${PG_USER}",
+  "pgpass":   "${PG_PASS}",
+  "pgname":   "${PG_NAME}",
+  "pghost":   "${PG_HOST}",
+  "pgport":   "${PG_PORT}",
+  "vktoken":  "${VK_TOKEN}",
+  "vkapi_version": "${VK_API_V}",
+  "timeout": ${TIMEOUT}
+}
+EOM
+
+cat > config/db.env <<- EOM
+POSTGRES_DB=${PG_NAME}
+POSTGRES_USER=${PG_USER}
+POSTGRES_PASSWORD=${PG_PASS}
+EOM
+
+sudo docker-compose build
