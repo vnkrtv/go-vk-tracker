@@ -2,6 +2,7 @@ package postgres
 
 import (
 	"database/sql"
+	"github.com/lib/pq"
 	"time"
 )
 
@@ -23,7 +24,7 @@ type University struct {
 }
 
 type School struct {
-	ID            int            `db:"school_id"`
+	ID            int32          `db:"school_id"`
 	Name          string         `db:"name"`
 	YearFrom      sql.NullInt32  `db:"year_from"`
 	YearTo        sql.NullInt32  `db:"year_to"`
@@ -34,7 +35,7 @@ type School struct {
 }
 
 type Group struct {
-	ID           int    `db:"group_id"`
+	ID           int32  `db:"group_id"`
 	ScreenName   string `db:"screen_name"`
 	Name         string `db:"name"`
 	MembersCount int    `db:"members_count"`
@@ -43,19 +44,19 @@ type Group struct {
 }
 
 type Photo struct {
-	ID            int           `db:"photo_id"`
+	ID            int32         `db:"photo_id"`
 	OwnerID       sql.NullInt32 `db:"owner_id"`
 	Date          time.Time     `db:"date"`
 	Text          string        `db:"text"`
 	LikesCount    int           `db:"likes_count"`
 	CommentsCount int           `db:"comments_count"`
 	RepostsCount  int           `db:"reposts_count"`
-	LikedIDs      []int         `db:"liked_ids"`
-	CommentedIDs  []int         `db:"commented_ids"`
+	LikedIDs      pq.Int32Array `db:"liked_ids"`
+	CommentedIDs  pq.Int32Array `db:"commented_ids"`
 }
 
 type Post struct {
-	ID            int           `db:"post_id"`
+	ID            int32         `db:"post_id"`
 	OwnerID       sql.NullInt32 `db:"owner_id"`
 	Date          time.Time     `db:"date"`
 	Text          string        `db:"text"`
@@ -63,12 +64,12 @@ type Post struct {
 	CommentsCount int           `db:"comments_count"`
 	ViewsCount    int           `db:"views_count"`
 	RepostsCount  int           `db:"reposts_count"`
-	LikedIDs      []int         `db:"liked_ids"`
-	CommentedIDs  []int         `db:"commented_ids"`
+	LikedIDs      pq.Int32Array `db:"liked_ids"`
+	CommentedIDs  pq.Int32Array `db:"commented_ids"`
 }
 
 type User struct {
-	ID             int           `db:"user_id"`
+	ID             int32         `db:"user_id"`
 	FirstName      string        `db:"first_name"`
 	LastName       string        `db:"last_name"`
 	IsClosed       bool          `db:"is_closed"`
@@ -81,16 +82,16 @@ type User struct {
 	CountryID      sql.NullInt32 `db:"country_id"`
 	CityID         sql.NullInt32 `db:"city_id"`
 	HomeTown       string        `db:"home_town"`
-	Universities   []int32       `db:"universities"`
-	Schools        []int         `db:"schools"`
+	Universities   pq.Int32Array `db:"universities"`
+	Schools        pq.Int32Array `db:"schools"`
 	FriendsCount   int           `db:"friends_count"`
-	FriendsIDs     []int         `db:"friends_ids"`
+	FriendsIDs     pq.Int32Array `db:"friends_ids"`
 	FollowersCount int           `db:"followers_count"`
-	FollowersIDs   []int         `db:"followers_ids"`
+	FollowersIDs   pq.Int32Array `db:"followers_ids"`
 	PostsCount     int           `db:"posts_count"`
-	PostsIDs       []int         `db:"posts_ids"`
+	PostsIDs       pq.Int32Array `db:"posts_ids"`
 	PhotosCount    int           `db:"photos_count"`
-	PhotosIDs      []int         `db:"photos_ids"`
+	PhotosIDs      pq.Int32Array `db:"photos_ids"`
 	GroupsCount    int           `db:"groups_count"`
-	GroupsIDs      []int         `db:"groups_ids"`
+	GroupsIDs      pq.Int32Array `db:"groups_ids"`
 }

@@ -18,7 +18,7 @@ type VKUniversity struct {
 }
 
 type VKSchool struct {
-	ID            int    `json:"id"`
+	ID            int32  `json:"id"`
 	Name          string `json:"name"`
 	YearFrom      int32  `json:"year_from"`
 	YearTo        int32  `json:"year_to"`
@@ -29,7 +29,7 @@ type VKSchool struct {
 }
 
 type VKUser struct {
-	ID           int            `json:"id"`
+	ID           int32          `json:"id"`
 	FirstName    string         `json:"first_name"`
 	LastName     string         `json:"last_name"`
 	IsClosed     bool           `json:"is_closed"`
@@ -51,7 +51,7 @@ type VKUsers struct {
 }
 
 type VKGroup struct {
-	ID           int    `json:"id"`
+	ID           int32  `json:"id"`
 	ScreenName   string `json:"screen_name"`
 	Name         string `json:"name"`
 	MembersCount int    `json:"members_count"`
@@ -65,7 +65,7 @@ type VKGroups struct {
 }
 
 type VKPhoto struct {
-	ID       int    `json:"id"`
+	ID       int32  `json:"id"`
 	OwnerID  int32  `json:"owner_id"`
 	Date     int64  `json:"date"`
 	PostType string `json:"post_type"`
@@ -84,7 +84,7 @@ type VKPhotos struct {
 }
 
 type VKPost struct {
-	ID       int    `json:"id"`
+	ID       int32  `json:"id"`
 	OwnerID  int32  `json:"owner_id"`
 	Date     int64  `json:"date"`
 	PostType string `json:"post_type"`

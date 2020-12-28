@@ -1,17 +1,11 @@
 package service
 
 import (
-	"github.com/pkg/errors"
 	"log"
 	"time"
 
 	pg "github.com/vnkrtv/go-vk-tracker/pkg/postgres"
 	vk "github.com/vnkrtv/go-vk-tracker/pkg/vkapi"
-)
-
-var (
-	IncorrectScreenName = errors.New("incorrect group screen name")
-	IncorrectUserID = errors.New("incorrect user id")
 )
 
 type VKLoader struct {
