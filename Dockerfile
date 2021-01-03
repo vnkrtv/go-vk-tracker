@@ -2,7 +2,7 @@ FROM golang:1.14 as builder
 
 WORKDIR /go/src/github.com/vnkrtv/go-vk-tracker
 COPY . .
-RUN go get -t .../ \
+RUN go test cmd/main.go \
  && go build -ldflags "-linkmode external -extldflags -static" -a cmd/main.go
 
 FROM alpine:3.6 as alpine
