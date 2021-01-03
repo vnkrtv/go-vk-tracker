@@ -1,1 +1,4 @@
 .idea/
+
+config/config.json
+config/db.env

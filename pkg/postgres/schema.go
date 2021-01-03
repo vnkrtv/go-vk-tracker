@@ -87,65 +87,6 @@ CREATE TABLE IF NOT EXISTS groups
     CONSTRAINT pk_groups PRIMARY KEY (group_id)
 );
 
-CREATE TABLE IF NOT EXISTS photos
-(
-    photo_id       int4
-        not null,
-    owner_id       int4,
-    likes_count    int4
-        not null,
-    comments_count int4
-        not null,
-    reposts_count  int4
-        not null,
-    liked_ids      int4[]
-        not null,
-    commented_ids  int4[]
-        not null,
-    text           text
-        not null,
-    date           timestamp
-        not null,
-
-    CONSTRAINT pk_photos PRIMARY KEY (photo_id),
-
-    CONSTRAINT fk_owner FOREIGN KEY (owner_id)
-        REFERENCES users (user_id)
-        ON DELETE SET NULL
-        ON UPDATE CASCADE
-);
-
-CREATE TABLE IF NOT EXISTS posts
-(
-    post_id        int4
-        not null,
-    owner_id       int4,
-    likes_count    int4
-        not null,
-    comments_count int4
-        not null,
-    reposts_count  int4
-        not null,
-    views_count    int4
-        not null,
-    liked_ids      int4[]
-        not null,
-    commented_ids  int4[]
-        not null,
-    text           text
-        not null,
-    date           timestamp
-        not null,
-
-    CONSTRAINT pk_posts PRIMARY KEY (post_id),
-
-    CONSTRAINT fk_owner FOREIGN KEY (owner_id)
-        REFERENCES users (user_id)
-        ON DELETE SET NULL
-        ON UPDATE CASCADE
-);
-
-
 CREATE TABLE IF NOT EXISTS users
 (
     user_id         int4
@@ -201,6 +142,64 @@ CREATE TABLE IF NOT EXISTS users
 
     CONSTRAINT fk_university FOREIGN KEY (university_id)
         REFERENCES universities (university_id)
+        ON DELETE SET NULL
+        ON UPDATE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS photos
+(
+    photo_id       int4
+        not null,
+    owner_id       int4,
+    likes_count    int4
+        not null,
+    comments_count int4
+        not null,
+    reposts_count  int4
+        not null,
+    liked_ids      int4[]
+        not null,
+    commented_ids  int4[]
+        not null,
+    text           text
+        not null,
+    date           timestamp
+        not null,
+
+    CONSTRAINT pk_photos PRIMARY KEY (photo_id),
+
+    CONSTRAINT fk_owner FOREIGN KEY (owner_id)
+        REFERENCES users (user_id)
+        ON DELETE SET NULL
+        ON UPDATE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS posts
+(
+    post_id        int4
+        not null,
+    owner_id       int4,
+    likes_count    int4
+        not null,
+    comments_count int4
+        not null,
+    reposts_count  int4
+        not null,
+    views_count    int4
+        not null,
+    liked_ids      int4[]
+        not null,
+    commented_ids  int4[]
+        not null,
+    text           text
+        not null,
+    date           timestamp
+        not null,
+
+    CONSTRAINT pk_posts PRIMARY KEY (post_id),
+
+    CONSTRAINT fk_owner FOREIGN KEY (owner_id)
+        REFERENCES users (user_id)
         ON DELETE SET NULL
         ON UPDATE CASCADE
 );

@@ -11,7 +11,7 @@ services:
 
   vk-loader:
     build: .
-    image: go-vk-tracker
+    image: 23031999/go-vk-tracker
     container_name: vk-tracker
     depends_on:
       - db
