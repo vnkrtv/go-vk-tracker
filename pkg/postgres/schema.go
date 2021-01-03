@@ -138,11 +138,6 @@ CREATE TABLE IF NOT EXISTS users
     CONSTRAINT fk_city FOREIGN KEY (city_id)
         REFERENCES cities (city_id)
         ON DELETE SET NULL
-        ON UPDATE CASCADE,
-
-    CONSTRAINT fk_university FOREIGN KEY (university_id)
-        REFERENCES universities (university_id)
-        ON DELETE SET NULL
         ON UPDATE CASCADE
 );
 
