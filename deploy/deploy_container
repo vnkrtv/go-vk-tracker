@@ -10,6 +10,19 @@ then
   exit 1
 fi
 
+read -r -p "PostgreSQL host: " PG_HOST
+if [ "${PG_HOST}" == "" ]
+then
+  echo "Error: PostgreSQL host must be specify"
+  exit 1
+fi
+
+read -r -p "PostgreSQL port (default: 5432): " PG_PORT
+if [ "${PG_PORT}" == "" ]
+then
+  PG_PORT=5432
+fi
+
 read -r -p "PostgreSQL user (default: postgres): " PG_USER
 if [ "${PG_USER}" == "" ]
 then
@@ -29,8 +42,8 @@ then
   PG_NAME=vkgroups
 fi
 
-export PG_HOST=db
-export PG_PORT=5432
+export PG_HOST="${PG_HOST}"
+export PG_PORT="${PG_PORT}"
 export PG_USER="${PG_USER}"
 export PG_PASS="${PG_PASS}"
 export PG_NAME="${PG_NAME}"
@@ -48,10 +61,4 @@ cat > config/config.json <<- EOM
 }
 EOM
 
-cat > config/db.env <<- EOM
-POSTGRES_DB=${PG_NAME}
-POSTGRES_USER=${PG_USER}
-POSTGRES_PASSWORD=${PG_PASS}
-EOM
-
-sudo docker-compose build
+sudo docker build -t 23031999/go-vk-tracker .

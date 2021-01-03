@@ -9,7 +9,7 @@ services:
     ports:
       - "0.0.0.0:15432:5432"
 
-  groups-loader:
+  vk-loader:
     build: .
     image: go-vk-tracker
     container_name: vk-tracker
