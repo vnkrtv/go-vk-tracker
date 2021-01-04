@@ -51,7 +51,7 @@ func (s *Storage) AddTrackingUser(userID int32) error {
 			($1)
 		ON CONFLICT (user_id)
     		DO NOTHING`
-	_, err := s.db.NamedExec(sql, userID)
+	_, err := s.db.Exec(sql, userID)
 	return err
 }
 
@@ -61,9 +61,9 @@ func (s *Storage) AddTrackingGroup(screenName string) error {
 			tracking_groups (screen_name) 
 		VALUES 
 			($1)
-		ON CONFLICT (country_id)
+		ON CONFLICT (screen_name)
     		DO NOTHING`
-	_, err := s.db.NamedExec(sql, screenName)
+	_, err := s.db.Exec(sql, screenName)
 	return err
 }
 
