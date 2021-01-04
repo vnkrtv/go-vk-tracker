@@ -159,7 +159,7 @@ func (s *Storage) InsertPhoto(photo Photo) error {
 			photos (photo_id, owner_id, date, text, likes_count, 
 			       comments_count, reposts_count, liked_ids, commented_ids) 
 		VALUES 
-			(:photo_id, :owner_id, :date, :text, :likes_count, :views_count, 
+			(:photo_id, :owner_id, :date, :text, :likes_count, 
 			 :comments_count, :reposts_count, :liked_ids, :commented_ids)
 		ON CONFLICT (photo_id)
 		DO UPDATE SET
@@ -235,7 +235,7 @@ func (s *Storage) InsertUser(user User) error {
 		VALUES 
 			(:user_id, :first_name, :last_name, :is_closed, :sex, :domain, :bdate, :city_id,
 			 :collect_date, :status, :verified, :country_id, :home_town, :universities,
-			 :schools, :friends_count, :friends_ids, :followers_count, :followers_ids
+			 :schools, :friends_count, :friends_ids, :followers_count, :followers_ids,
 			 :posts_count, :posts_ids, :photos_count, :photos_ids, :groups_count, :groups_ids)
 		ON CONFLICT (user_id, collect_date)
     		DO UPDATE SET

@@ -33,15 +33,19 @@ func NewVKApi(token, apiVersion string, timeout float32) (*VKAPi, error) {
 	}, err
 }
 
+func (a *VKAPi) Sleep(secondsNum float32) {
+	time.Sleep(time.Duration(secondsNum) * time.Second)
+}
+
 func (a *VKAPi) GetUser(userID int32) (VKUser, error) {
-	var user VKUser
+	var users []VKUser
 	fields := `home_town,schools,status,domain,sex,bdate,country,city,contacts,universities`
 	err := a.api.CallMethod("users.get", vk.RequestParams{
 		"user_ids": userID,
 		"fields": fields,
 		"v": a.apiVersion,
-	}, &user)
-	return user, err
+	}, &users)
+	return users[0], err
 }
 
 func (a *VKAPi) GetFriends(userID int32) (VKUsers, error) {
@@ -114,36 +118,37 @@ func (a *VKAPi) GetGroupPosts(screenName string) (VKGroupInfo, error) {
 
 func (a *VKAPi) GetUserInfo(userID int32) (*VKUserInfo, error) {
 	user, err := a.GetUser(userID)
+	a.Sleep(a.Timeout)
 	if err != nil {
 		return nil, err
 	}
 
-	time.Sleep(time.Duration(a.Timeout) * time.Second)
 	friends, err := a.GetFriends(userID)
+	a.Sleep(a.Timeout)
 	if err != nil {
 		return nil, err
 	}
 
-	time.Sleep(time.Duration(a.Timeout) * time.Second)
 	followers, err := a.GetFollowers(userID)
+	a.Sleep(a.Timeout)
 	if err != nil {
 		return nil, err
 	}
 
-	time.Sleep(time.Duration(a.Timeout) * time.Second)
 	groups, err := a.GetGroups(userID)
+	a.Sleep(a.Timeout)
 	if err != nil {
 		return nil, err
 	}
 
-	time.Sleep(time.Duration(a.Timeout) * time.Second)
 	posts, err := a.GetUserPosts(userID)
+	a.Sleep(a.Timeout)
 	if err != nil {
 		return nil, err
 	}
 
-	time.Sleep(time.Duration(a.Timeout) * time.Second)
 	photos, err := a.GetPhotos(userID)
+	a.Sleep(a.Timeout)
 	if err != nil {
 		return nil, err
 	}

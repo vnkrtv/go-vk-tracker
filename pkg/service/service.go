@@ -2,15 +2,14 @@ package service
 
 import (
 	"log"
-	"time"
 
 	pg "github.com/vnkrtv/go-vk-tracker/pkg/postgres"
 	vk "github.com/vnkrtv/go-vk-tracker/pkg/vkapi"
 )
 
 type VKLoader struct {
-	db          *pg.Storage
-	vkApi       *vk.VKAPi
+	db    *pg.Storage
+	vkApi *vk.VKAPi
 }
 
 func NewVKLoader(vkToken, apiVersion string, timeout float32, pgUser, pgPass, pgHost, pgPort, pgDBName string) (*VKLoader, error) {
@@ -23,8 +22,8 @@ func NewVKLoader(vkToken, apiVersion string, timeout float32, pgUser, pgPass, pg
 		return nil, err
 	}
 	return &VKLoader{
-		db:          db,
-		vkApi:       api,
+		db:    db,
+		vkApi: api,
 	}, err
 }
 
@@ -35,6 +34,10 @@ func NewVKLoaderFromCfg(cfg Config) (*VKLoader, error) {
 
 func (s *VKLoader) InitDB() error {
 	return s.db.CreateSchema()
+}
+
+func (s *VKLoader) Sleep(secondsNum float32) {
+	s.vkApi.Sleep(secondsNum)
 }
 
 func (s *VKLoader) AddTrackingUsers(usersIDs []int32) error {
@@ -62,19 +65,19 @@ func (s *VKLoader) LoadGroupsInfo() error {
 	}
 	for _, screenName := range groupScreenNames {
 		vkGroup, vkPosts, err := s.vkApi.GetGroupInfo(screenName)
+		s.Sleep(s.vkApi.Timeout)
 		if err != nil {
-			return err
-		}
-		time.Sleep(time.Duration(s.vkApi.Timeout) * time.Second)
+			log.Printf("Error on getting group[screen_name=%s] info: %s", screenName, err)
+		} else {
+			group := parseVKGroup(vkGroup)
+			if err := s.db.InsertGroup(group); err != nil {
+				log.Printf("Error on inserting group in db: %s", err)
+			}
 
-		group := parseVKGroup(vkGroup)
-		if err := s.db.InsertGroup(group); err != nil {
-			log.Printf("Error on inserting group in db: %s", err)
-		}
-
-		posts := parseVKPosts(vkPosts)
-		if err := s.db.InsertPosts(posts); err != nil {
-			log.Printf("Error on inserting post in db: %s", err)
+			posts := parseVKPosts(vkPosts)
+			if err := s.db.InsertPosts(posts); err != nil {
+				log.Printf("Error on inserting post in db: %s", err)
+			}
 		}
 	}
 	return nil
@@ -87,8 +90,9 @@ func (s *VKLoader) LoadUsersInfo() error {
 	}
 	for _, userID := range userIDs {
 		userInfo, err := s.vkApi.GetUserInfo(userID)
+		s.Sleep(s.vkApi.Timeout)
 		if err != nil {
-			log.Printf("Error on getting user info: %s", err)
+			log.Printf("Error on getting user[id=%d] info: %s", userID, err)
 		} else {
 			log.Printf("Get info about %s %s (@%s) by VK API",
 				userInfo.MainInfo.FirstName, userInfo.MainInfo.LastName, userInfo.MainInfo.Domain)

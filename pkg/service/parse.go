@@ -3,6 +3,7 @@ package service
 import (
 	"database/sql"
 	"github.com/lib/pq"
+	"strconv"
 	"time"
 
 	pg "github.com/vnkrtv/go-vk-tracker/pkg/postgres"
@@ -63,8 +64,9 @@ func parseVKSchool(vkSchool vk.VKSchool) (pg.School, pg.Country, pg.City) {
 		ID:    vkSchool.CityID,
 		Title: "",
 	}
+	schoolID, _ := strconv.Atoi(vkSchool.ID)
 	school := pg.School{
-		ID:            vkSchool.ID,
+		ID:            int32(schoolID),
 		Name:          vkSchool.Name,
 		YearFrom:      sql.NullInt32{Int32: vkSchool.YearFrom, Valid: true},
 		YearTo:        sql.NullInt32{Int32: vkSchool.YearTo, Valid: true},
@@ -96,7 +98,7 @@ func parseVKGroup(group vk.VKGroup) pg.Group {
 		Name:         group.Name,
 		MembersCount: group.MembersCount,
 		Type:         group.Type,
-		IsClosed:     group.IsClosed,
+		IsClosed:     group.IsClosed == 1,
 	}
 }
 
@@ -195,7 +197,8 @@ func parseVKUser(vkUser vk.VKUser) (pg.User, pg.Country, pg.City) {
 func parseTrackingUser(userInfo vk.VKUserInfo) (pg.User, pg.Country, pg.City) {
 	schoolsIDs := make(pq.Int32Array, len(userInfo.MainInfo.Schools))
 	for i := range schoolsIDs {
-		schoolsIDs[i] = userInfo.MainInfo.Schools[i].ID
+		schoolID, _ := strconv.Atoi(userInfo.MainInfo.Schools[i].ID)
+		schoolsIDs[i] = int32(schoolID)
 	}
 
 	universitiesIDs := make(pq.Int32Array, len(userInfo.MainInfo.Universities))
@@ -203,27 +206,27 @@ func parseTrackingUser(userInfo vk.VKUserInfo) (pg.User, pg.Country, pg.City) {
 		universitiesIDs[i] = userInfo.MainInfo.Universities[i].ID
 	}
 
-	friendsIDs := make(pq.Int32Array, userInfo.Friends.Count)
+	friendsIDs := make(pq.Int32Array, len(userInfo.Friends.Items))
 	for i := range friendsIDs {
 		friendsIDs[i] = userInfo.Friends.Items[i].ID
 	}
 
-	followersIDs := make(pq.Int32Array, userInfo.Followers.Count)
+	followersIDs := make(pq.Int32Array, len(userInfo.Followers.Items))
 	for i := range followersIDs {
 		followersIDs[i] = userInfo.Followers.Items[i].ID
 	}
 
-	postsIDs := make(pq.Int32Array, userInfo.Posts.Count)
+	postsIDs := make(pq.Int32Array, len(userInfo.Posts.Items))
 	for i := range postsIDs {
 		postsIDs[i] = userInfo.Posts.Items[i].ID
 	}
 
-	photosIDs := make(pq.Int32Array, userInfo.Photos.Count)
+	photosIDs := make(pq.Int32Array, len(userInfo.Photos.Items))
 	for i := range photosIDs {
 		photosIDs[i] = userInfo.Photos.Items[i].ID
 	}
 
-	groupsIDs := make(pq.Int32Array, userInfo.Groups.Count)
+	groupsIDs := make(pq.Int32Array, len(userInfo.Groups.Items))
 	for i := range groupsIDs {
 		groupsIDs[i] = userInfo.Groups.Items[i].ID
 	}

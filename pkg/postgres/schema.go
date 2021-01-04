@@ -13,7 +13,7 @@ CREATE TABLE IF NOT EXISTS countries
 
 CREATE TABLE IF NOT EXISTS cities
 (
-    city_id int2
+    city_id int4
         not null,
     title   text
         not null,
@@ -23,12 +23,12 @@ CREATE TABLE IF NOT EXISTS cities
 
 CREATE TABLE IF NOT EXISTS universities
 (
-    university_id int2
+    university_id int4
         not null,
     name          text
         not null,
     country_id    int2,
-    city_id        int2,
+    city_id        int4,
 
     CONSTRAINT pk_universities PRIMARY KEY (university_id),
 
@@ -54,7 +54,7 @@ CREATE TABLE IF NOT EXISTS schools
     year_graduated int2,
     type_str       text,
     country_id     int2,
-    city_id        int2,
+    city_id        int4,
 
     CONSTRAINT pk_schools PRIMARY KEY (school_id),
 
@@ -111,10 +111,10 @@ CREATE TABLE IF NOT EXISTS users
     verified        bool
         not null,
     country_id      int2,
-    city_id         int2,
+    city_id         int4,
     home_town       text
         not null,
-    universities    int2[]
+    universities    int4[]
         not null,
     schools         int4[]
         not null,
@@ -162,12 +162,7 @@ CREATE TABLE IF NOT EXISTS photos
     date           timestamp
         not null,
 
-    CONSTRAINT pk_photos PRIMARY KEY (photo_id),
-
-    CONSTRAINT fk_owner FOREIGN KEY (owner_id)
-        REFERENCES users (user_id)
-        ON DELETE SET NULL
-        ON UPDATE CASCADE
+    CONSTRAINT pk_photos PRIMARY KEY (photo_id)
 );
 
 CREATE TABLE IF NOT EXISTS posts
@@ -192,12 +187,7 @@ CREATE TABLE IF NOT EXISTS posts
     date           timestamp
         not null,
 
-    CONSTRAINT pk_posts PRIMARY KEY (post_id),
-
-    CONSTRAINT fk_owner FOREIGN KEY (owner_id)
-        REFERENCES users (user_id)
-        ON DELETE SET NULL
-        ON UPDATE CASCADE
+    CONSTRAINT pk_posts PRIMARY KEY (post_id)
 );
 
 CREATE TABLE IF NOT EXISTS tracking_groups

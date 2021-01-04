@@ -18,7 +18,7 @@ type VKUniversity struct {
 }
 
 type VKSchool struct {
-	ID            int32  `json:"id"`
+	ID            string `json:"id"`
 	Name          string `json:"name"`
 	YearFrom      int32  `json:"year_from"`
 	YearTo        int32  `json:"year_to"`
@@ -56,7 +56,7 @@ type VKGroup struct {
 	Name         string `json:"name"`
 	MembersCount int    `json:"members_count"`
 	Type         string `json:"type"`
-	IsClosed     bool   `json:"is_closed"`
+	IsClosed     int    `json:"is_closed"`
 }
 
 type VKGroups struct {
