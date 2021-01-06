@@ -186,7 +186,7 @@ func (s *VKLoader) LoadUsersInfo() error {
 					log.Printf("Error on inserting school in db: %s", err)
 				}
 
-				if err = s.db.InsertUser(friend); err != nil {
+				if err = s.db.InsertUser(friend, false); err != nil {
 					log.Printf("Error on inserting friend in db: %s", err)
 				}
 			}
@@ -222,7 +222,7 @@ func (s *VKLoader) LoadUsersInfo() error {
 					log.Printf("Error on inserting school in db: %s", err)
 				}
 
-				if err = s.db.InsertUser(follower); err != nil {
+				if err = s.db.InsertUser(follower, false); err != nil {
 					log.Printf("Error on inserting follower in db: %s", err)
 				}
 			}
