@@ -225,8 +225,9 @@ func (s *Storage) InsertGroups(groups []Group) error {
 	return nil
 }
 
-func (s *Storage) InsertUser(user User) error {
-	sql := `
+func (s *Storage) InsertUser(user User, loadedUser bool) error {
+	var sql, params string
+	sql = `
 		INSERT INTO 
 			users (user_id, first_name, last_name, is_closed, sex, domain, bdate, city_id,
 			       collect_date, status, verified, country_id, home_town, universities,
@@ -239,20 +240,27 @@ func (s *Storage) InsertUser(user User) error {
 			 :posts_count, :posts_ids, :photos_count, :photos_ids, :groups_count, :groups_ids)
 		ON CONFLICT (user_id, collect_date)
     		DO UPDATE SET
-    			first_name = :first_name, last_name = :last_name, is_closed = :is_closed, city_id = :city_id,
+    			%s`
+	if loadedUser {
+		params = `
+				first_name = :first_name, last_name = :last_name, is_closed = :is_closed, city_id = :city_id,
     			domain = :domain, bdate = :bdate, status = :status, verified = :verified,
     		    country_id = :country_id, home_town = :home_town, universities = :universities,
     		    schools = :schools, friends_count = :friends_count, friends_ids = :friends_ids,
     		    followers_count = :followers_count, followers_ids = :followers_ids, posts_count = :posts_count,
     		    posts_ids = :posts_ids, photos_count = :photos_count, photos_ids = :photos_ids, 
     		    groups_count = :groups_count, groups_ids = :groups_ids`
-	_, err := s.db.NamedExec(sql, &user)
+	} else {
+		params = `
+				first_name = :first_name, last_name = :last_name, status = :status`
+	}
+	_, err := s.db.NamedExec(fmt.Sprintf(sql, params), &user)
 	return err
 }
 
 func (s *Storage) InsertUsers(users []User) error {
 	for _, user := range users {
-		if err := s.InsertUser(user); err != nil {
+		if err := s.InsertUser(user, false); err != nil {
 			return err
 		}
 	}

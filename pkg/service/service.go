@@ -17,10 +17,12 @@ func NewVKLoader(vkToken, apiVersion string, timeout float32, pgUser, pgPass, pg
 	if err != nil {
 		return nil, err
 	}
+	log.Printf("Connected to PostgreSQL(%s:%s@%s:%s/%s)", pgUser, pgPass, pgHost, pgPort, pgDBName)
 	api, err := vk.NewVKApi(vkToken, apiVersion, timeout)
 	if err != nil {
 		return nil, err
 	}
+	log.Printf("Open VKApi client connection (%s v)", apiVersion)
 	return &VKLoader{
 		db:    db,
 		vkApi: api,
@@ -45,6 +47,7 @@ func (s *VKLoader) AddTrackingUsers(usersIDs []int32) error {
 		if err := s.db.AddTrackingUser(userID); err != nil {
 			return err
 		}
+		log.Printf("Start tracking user[id=%d]", userID)
 	}
 	return nil
 }
@@ -54,6 +57,7 @@ func (s *VKLoader) AddTrackingGroups(screenNames []string) error {
 		if err := s.db.AddTrackingGroup(screenName); err != nil {
 			return err
 		}
+		log.Printf("Start tracking group[screen_name=%s]", screenName)
 	}
 	return nil
 }
@@ -78,6 +82,7 @@ func (s *VKLoader) LoadGroupsInfo() error {
 			if err := s.db.InsertPosts(posts); err != nil {
 				log.Printf("Error on inserting post in db: %s", err)
 			}
+			log.Printf("Get group[screen_name=%s] info", screenName)
 		}
 	}
 	return nil
@@ -94,8 +99,8 @@ func (s *VKLoader) LoadUsersInfo() error {
 		if err != nil {
 			log.Printf("Error on getting user[id=%d] info: %s", userID, err)
 		} else {
-			log.Printf("Get info about %s %s (@%s) by VK API",
-				userInfo.MainInfo.FirstName, userInfo.MainInfo.LastName, userInfo.MainInfo.Domain)
+			log.Printf("Get user[id=%s,domain=%s,first_name=%s,second_name=%s] info",
+				userInfo.MainInfo.ID, userInfo.MainInfo.FirstName, userInfo.MainInfo.LastName, userInfo.MainInfo.Domain)
 
 			user, country, city := parseTrackingUser(*userInfo)
 			if err = s.db.InsertCountry(country); err != nil {
@@ -136,7 +141,7 @@ func (s *VKLoader) LoadUsersInfo() error {
 				log.Printf("Error on inserting group in db: %s", err)
 			}
 
-			if err = s.db.InsertUser(user); err != nil {
+			if err = s.db.InsertUser(user, true); err != nil {
 				log.Printf("Error on inserting user in db: %s", err)
 			}
 

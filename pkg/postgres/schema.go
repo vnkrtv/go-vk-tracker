@@ -90,7 +90,6 @@ CREATE TABLE IF NOT EXISTS groups
 CREATE TABLE IF NOT EXISTS users
 (
     user_id         int4
-		unique
         not null,
     first_name      text
         not null,
