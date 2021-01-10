@@ -1,28 +1,31 @@
 package vkapi
 
 import (
+	"log"
 	"time"
 
 	"github.com/go-vk-api/vk"
 )
 
 type VKTracker interface {
-	GetUser(userID int) (VKUser, error)
-	GetFriends(userID int) (VKUsers, error)
-	GetFollowers(userID int) (VKUsers, error)
-	GetGroups(userID int) (VKGroups, error)
-	GetPhotos(userID int) (VKPhotos, error)
-	GetUserPosts(userID int) (VKPosts, error)
-	GetGroupPosts(userID int) (VKPosts, error)
+	GetUser(userID int32) (VKUser, error)
+	GetFriends(userID int32) (VKUsers, error)
+	GetFollowers(userID int32) (VKUsers, error)
+	GetGroups(userID int32) (VKGroups, error)
+	GetPhotos(userID int32) (VKPhotos, error)
+	GetUserPosts(userID int32) (VKPosts, error)
+	GetUserInfo(userID int32) (*VKUserInfo, error)
+	GetGroupPosts(screenName string) (VKGroupInfo, error)
+	GetGroupInfo(screenName string) (VKGroup, []VKPost, error)
 }
 
 type VKAPi struct {
 	api        *vk.Client
 	apiVersion string
-	Timeout    float32
+	Timeout    int32
 }
 
-func NewVKApi(token, apiVersion string, timeout float32) (*VKAPi, error) {
+func NewVKApi(token, apiVersion string, timeout int32) (*VKAPi, error) {
 	api, err := vk.NewClientWithOptions(
 		vk.WithToken(token),
 	)
@@ -33,8 +36,8 @@ func NewVKApi(token, apiVersion string, timeout float32) (*VKAPi, error) {
 	}, err
 }
 
-func (a *VKAPi) Sleep(secondsNum float32) {
-	time.Sleep(time.Duration(secondsNum) * time.Second)
+func (a *VKAPi) Sleep(millisecondNum int32) {
+	time.Sleep(time.Duration(millisecondNum) * time.Millisecond)
 }
 
 func (a *VKAPi) GetUser(userID int32) (VKUser, error) {
@@ -122,36 +125,42 @@ func (a *VKAPi) GetUserInfo(userID int32) (*VKUserInfo, error) {
 	if err != nil {
 		return nil, err
 	}
+	log.Printf("Loaded user[id=%d] main info", userID)
 
 	friends, err := a.GetFriends(userID)
 	a.Sleep(a.Timeout)
 	if err != nil {
 		return nil, err
 	}
+	log.Printf("Loaded user[id=%d] friends", userID)
 
 	followers, err := a.GetFollowers(userID)
 	a.Sleep(a.Timeout)
 	if err != nil {
 		return nil, err
 	}
+	log.Printf("Loaded user[id=%d] followers", userID)
 
 	groups, err := a.GetGroups(userID)
 	a.Sleep(a.Timeout)
 	if err != nil {
 		return nil, err
 	}
+	log.Printf("Loaded user[id=%d] groups", userID)
 
 	posts, err := a.GetUserPosts(userID)
 	a.Sleep(a.Timeout)
 	if err != nil {
 		return nil, err
 	}
+	log.Printf("Loaded user[id=%d] posts", userID)
 
 	photos, err := a.GetPhotos(userID)
 	a.Sleep(a.Timeout)
 	if err != nil {
 		return nil, err
 	}
+	log.Printf("Loaded user[id=%d] photos", userID)
 
 	return &VKUserInfo{
 		MainInfo:  user,

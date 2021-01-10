@@ -12,7 +12,7 @@ type Config struct {
 	PGHost       string  `json:"pghost"`
 	PGPort       string  `json:"pgport"`
 	VKToken      string  `json:"vktoken"`
-	Timeout      float32 `json:"timeout"`
+	Timeout      int32   `json:"timeout"` // timeout for VKApi requests in milliseconds
 	VKApiVersion string  `json:"vkapi_version"`
 }
 

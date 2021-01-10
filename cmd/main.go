@@ -45,14 +45,17 @@ func main() {
 		if err := vkLoader.LoadUsersInfo(); err != nil {
 			log.Println(err)
 		} else {
-			log.Println()
+			log.Printf("Loaded all tracking users info")
 		}
+		log.Println()
+		log.Println()
 		if err := vkLoader.LoadGroupsInfo(); err != nil {
 			log.Println(err)
 		} else {
-			log.Println()
+			log.Printf("Loaded all tracking groups info\n")
 		}
-
-		vkLoader.Sleep(10.0)
+		log.Println()
+		log.Println()
+		vkLoader.Sleep(10 * 1000)
 	}
 }

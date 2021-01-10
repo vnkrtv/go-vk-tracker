@@ -2,6 +2,7 @@ package postgres
 
 import (
 	"fmt"
+	"log"
 
 	"github.com/jmoiron/sqlx"
 	_ "github.com/lib/pq"
@@ -85,6 +86,7 @@ func (s *Storage) InsertCountries(countries []Country) error {
 			return err
 		}
 	}
+	log.Printf("Upsert %d countries in db", len(countries))
 	return nil
 }
 
@@ -106,6 +108,7 @@ func (s *Storage) InsertCities(cities []City) error {
 			return err
 		}
 	}
+	log.Printf("Upsert %d cities in db", len(cities))
 	return nil
 }
 
@@ -127,6 +130,7 @@ func (s *Storage) InsertUniversities(universities []University) error {
 			return err
 		}
 	}
+	log.Printf("Upsert %d universities in db", len(universities))
 	return nil
 }
 
@@ -150,6 +154,7 @@ func (s *Storage) InsertSchools(schools []School) error {
 			return err
 		}
 	}
+	log.Printf("Upsert %d schools in db", len(schools))
 	return nil
 }
 
@@ -174,6 +179,9 @@ func (s *Storage) InsertPhotos(photos []Photo) error {
 		if err := s.InsertPhoto(photo); err != nil {
 			return err
 		}
+	}
+	if len(photos) > 0 {
+		log.Printf("Upsert %d photos[owner_id=%d] in db", len(photos), photos[0].OwnerID.Int32)
 	}
 	return nil
 }
@@ -200,6 +208,9 @@ func (s *Storage) InsertPosts(posts []Post) error {
 			return err
 		}
 	}
+	if len(posts) > 0 {
+		log.Printf("Upsert %d posts[owner_id=%d] in db", len(posts), posts[0].OwnerID.Int32)
+	}
 	return nil
 }
 
@@ -222,6 +233,7 @@ func (s *Storage) InsertGroups(groups []Group) error {
 			return err
 		}
 	}
+	log.Printf("Upsert %d groups in db", len(groups))
 	return nil
 }
 
@@ -264,5 +276,6 @@ func (s *Storage) InsertUsers(users []User) error {
 			return err
 		}
 	}
+	log.Printf("Upsert %d users in db", len(users))
 	return nil
 }

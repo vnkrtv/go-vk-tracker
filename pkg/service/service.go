@@ -12,7 +12,7 @@ type VKLoader struct {
 	vkApi *vk.VKAPi
 }
 
-func NewVKLoader(vkToken, apiVersion string, timeout float32, pgUser, pgPass, pgHost, pgPort, pgDBName string) (*VKLoader, error) {
+func NewVKLoader(vkToken, apiVersion string, timeout int32, pgUser, pgPass, pgHost, pgPort, pgDBName string) (*VKLoader, error) {
 	db, err := pg.OpenConnection(pgUser, pgPass, pgHost, pgPort, pgDBName)
 	if err != nil {
 		return nil, err
@@ -38,8 +38,8 @@ func (s *VKLoader) InitDB() error {
 	return s.db.CreateSchema()
 }
 
-func (s *VKLoader) Sleep(secondsNum float32) {
-	s.vkApi.Sleep(secondsNum)
+func (s *VKLoader) Sleep(millisecondNum int32) {
+	s.vkApi.Sleep(millisecondNum)
 }
 
 func (s *VKLoader) AddTrackingUsers(usersIDs []int32) error {
@@ -72,6 +72,7 @@ func (s *VKLoader) LoadGroupsInfo() error {
 		s.Sleep(s.vkApi.Timeout)
 		if err != nil {
 			log.Printf("Error on getting group[screen_name=%s] info: %s", screenName, err)
+			log.Println()
 		} else {
 			group := parseVKGroup(vkGroup)
 			if err := s.db.InsertGroup(group); err != nil {
@@ -82,7 +83,8 @@ func (s *VKLoader) LoadGroupsInfo() error {
 			if err := s.db.InsertPosts(posts); err != nil {
 				log.Printf("Error on inserting post in db: %s", err)
 			}
-			log.Printf("Get group[screen_name=%s] info", screenName)
+			log.Printf("Get full group[screen_name=%s] info", screenName)
+			log.Println()
 		}
 	}
 	return nil
@@ -98,10 +100,8 @@ func (s *VKLoader) LoadUsersInfo() error {
 		s.Sleep(s.vkApi.Timeout)
 		if err != nil {
 			log.Printf("Error on getting user[id=%d] info: %s", userID, err)
+			log.Println()
 		} else {
-			log.Printf("Get user[id=%s,domain=%s,first_name=%s,second_name=%s] info",
-				userInfo.MainInfo.ID, userInfo.MainInfo.FirstName, userInfo.MainInfo.LastName, userInfo.MainInfo.Domain)
-
 			user, country, city := parseTrackingUser(*userInfo)
 			if err = s.db.InsertCountry(country); err != nil {
 				log.Printf("Error on inserting country in db: %s", err)
@@ -110,8 +110,6 @@ func (s *VKLoader) LoadUsersInfo() error {
 			}
 			if err = s.db.InsertCity(city); err != nil {
 				log.Printf("Error on inserting city in db: %s", err)
-			} else {
-
 			}
 
 			universities, countries, cities := parseVKUniversities(userInfo.MainInfo.Universities)
@@ -227,6 +225,9 @@ func (s *VKLoader) LoadUsersInfo() error {
 				}
 			}
 
+			log.Printf("Get user[id=%d,domain=%s,first_name=%s,second_name=%s] info",
+				userInfo.MainInfo.ID, userInfo.MainInfo.FirstName, userInfo.MainInfo.LastName, userInfo.MainInfo.Domain)
+			log.Println()
 		}
 
 	}
