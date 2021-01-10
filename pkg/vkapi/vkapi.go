@@ -121,46 +121,52 @@ func (a *VKAPi) GetGroupPosts(screenName string) (VKGroupInfo, error) {
 
 func (a *VKAPi) GetUserInfo(userID int32) (*VKUserInfo, error) {
 	user, err := a.GetUser(userID)
-	a.Sleep(a.Timeout)
 	if err != nil {
 		return nil, err
+	} else {
+		log.Printf("Loaded user[id=%d] main info", userID)
 	}
-	log.Printf("Loaded user[id=%d] main info", userID)
+	a.Sleep(a.Timeout)
 
 	friends, err := a.GetFriends(userID)
-	a.Sleep(a.Timeout)
 	if err != nil {
-		return nil, err
+		log.Printf("Error on getting user[id=%d] friends: %s", userID, err)
+	} else {
+		log.Printf("Loaded user[id=%d] friends", userID)
 	}
-	log.Printf("Loaded user[id=%d] friends", userID)
+	a.Sleep(a.Timeout)
 
 	followers, err := a.GetFollowers(userID)
-	a.Sleep(a.Timeout)
 	if err != nil {
-		return nil, err
+		log.Printf("Error on getting user[id=%d] followers: %s", userID, err)
+	} else {
+		log.Printf("Loaded user[id=%d] followers", userID)
 	}
-	log.Printf("Loaded user[id=%d] followers", userID)
+	a.Sleep(a.Timeout)
 
 	groups, err := a.GetGroups(userID)
-	a.Sleep(a.Timeout)
 	if err != nil {
-		return nil, err
+		log.Printf("Error on getting user[id=%d] groups: %s", userID, err)
+	} else {
+		log.Printf("Loaded user[id=%d] groups", userID)
 	}
-	log.Printf("Loaded user[id=%d] groups", userID)
+	a.Sleep(a.Timeout)
 
 	posts, err := a.GetUserPosts(userID)
-	a.Sleep(a.Timeout)
 	if err != nil {
-		return nil, err
+		log.Printf("Error on getting user[id=%d] posts: %s", userID, err)
+	} else {
+		log.Printf("Loaded user[id=%d] posts", userID)
 	}
-	log.Printf("Loaded user[id=%d] posts", userID)
+	a.Sleep(a.Timeout)
 
 	photos, err := a.GetPhotos(userID)
-	a.Sleep(a.Timeout)
 	if err != nil {
-		return nil, err
+		log.Printf("Error on getting user[id=%d] photos: %s", userID, err)
+	} else {
+		log.Printf("Loaded user[id=%d] photos", userID)
 	}
-	log.Printf("Loaded user[id=%d] photos", userID)
+	a.Sleep(a.Timeout)
 
 	return &VKUserInfo{
 		MainInfo:  user,

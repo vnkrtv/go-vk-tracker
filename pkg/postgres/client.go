@@ -86,7 +86,7 @@ func (s *Storage) InsertCountries(countries []Country) error {
 			return err
 		}
 	}
-	log.Printf("Upsert %d countries in db", len(countries))
+	//log.Printf("Upsert %d countries in db", len(countries))
 	return nil
 }
 
@@ -108,7 +108,7 @@ func (s *Storage) InsertCities(cities []City) error {
 			return err
 		}
 	}
-	log.Printf("Upsert %d cities in db", len(cities))
+	//log.Printf("Upsert %d cities in db", len(cities))
 	return nil
 }
 
@@ -130,7 +130,7 @@ func (s *Storage) InsertUniversities(universities []University) error {
 			return err
 		}
 	}
-	log.Printf("Upsert %d universities in db", len(universities))
+	//log.Printf("Upsert %d universities in db", len(universities))
 	return nil
 }
 
@@ -154,7 +154,7 @@ func (s *Storage) InsertSchools(schools []School) error {
 			return err
 		}
 	}
-	log.Printf("Upsert %d schools in db", len(schools))
+	//log.Printf("Upsert %d schools in db", len(schools))
 	return nil
 }
 

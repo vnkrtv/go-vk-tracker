@@ -37,9 +37,11 @@ func main() {
 	if err := vkLoader.AddTrackingUsers(usersIDs); err != nil {
 		log.Fatal(err)
 	}
+	log.Println()
 	if err := vkLoader.AddTrackingGroups(groupsScreenNames); err != nil {
 		log.Fatal(err)
 	}
+	log.Println()
 
 	for {
 		if err := vkLoader.LoadUsersInfo(); err != nil {

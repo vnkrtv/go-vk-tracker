@@ -22,7 +22,7 @@ func NewVKLoader(vkToken, apiVersion string, timeout int32, pgUser, pgPass, pgHo
 	if err != nil {
 		return nil, err
 	}
-	log.Printf("Open VKApi client connection (%s v)", apiVersion)
+	log.Printf("Open VKApi client connection (api_version=%s,timeout=%d milliseconds)", apiVersion, timeout)
 	return &VKLoader{
 		db:    db,
 		vkApi: api,
@@ -105,8 +105,6 @@ func (s *VKLoader) LoadUsersInfo() error {
 			user, country, city := parseTrackingUser(*userInfo)
 			if err = s.db.InsertCountry(country); err != nil {
 				log.Printf("Error on inserting country in db: %s", err)
-			} else {
-				log.Printf("Error on getting user info: %s", err)
 			}
 			if err = s.db.InsertCity(city); err != nil {
 				log.Printf("Error on inserting city in db: %s", err)
@@ -188,6 +186,7 @@ func (s *VKLoader) LoadUsersInfo() error {
 					log.Printf("Error on inserting friend in db: %s", err)
 				}
 			}
+			log.Printf("Upsert user[id=%d] %d friends in db", user.ID, len(userInfo.Friends.Items))
 
 			for _, vkFollower := range userInfo.Followers.Items {
 				follower, country, city := parseVKUser(vkFollower)
@@ -224,6 +223,7 @@ func (s *VKLoader) LoadUsersInfo() error {
 					log.Printf("Error on inserting follower in db: %s", err)
 				}
 			}
+			log.Printf("Upsert user[id=%d] %d followers in db", user.ID, len(userInfo.Followers.Items))
 
 			log.Printf("Get user[id=%d,domain=%s,first_name=%s,second_name=%s] info",
 				userInfo.MainInfo.ID, userInfo.MainInfo.FirstName, userInfo.MainInfo.LastName, userInfo.MainInfo.Domain)
